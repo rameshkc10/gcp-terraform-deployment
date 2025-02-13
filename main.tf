@@ -1,6 +1,7 @@
 provider "google" {
-  project = "your-project-id" # Replace with your Google Cloud project ID
+  project = "Lab1" # Replace with your Google Cloud project ID
   region  = "us-central1"
+  credentials = file("credentials.json")
 }
 
 resource "google_storage_bucket" "example" {
