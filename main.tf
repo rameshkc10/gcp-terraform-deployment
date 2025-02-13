@@ -1,5 +1,5 @@
 provider "google" {
-  project = "Lab1" # Replace with your Google Cloud project ID
+  project = "Lab1" 
   region  = "us-central1"
   credentials = file("credentials.json")
 }
