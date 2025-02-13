@@ -36,6 +36,6 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: credentials.json
         run: terraform apply -auto-approve
 
-      # Example of using new environment variable output
+      # Example of using new environment variable outputS
       - name: Save Terraform Plan output
         run: echo "terraform_output=tfplan" >> $GITHUB_ENV
