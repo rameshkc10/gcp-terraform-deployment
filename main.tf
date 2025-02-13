@@ -1,7 +1,7 @@
 provider "google" {
   project = "lab1-450801" 
   region  = "us-central1"
-  credentials = file("credentials.json")
+  
 }
 
 resource "google_storage_bucket" "example" {
