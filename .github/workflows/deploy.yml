@@ -17,13 +17,21 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Authenticate to GCP
-        run: echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json && export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
+        run: echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: credentials.json  # Persist env variable
 
       - name: Terraform Init
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: credentials.json
         run: terraform init
 
       - name: Terraform Plan
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: credentials.json
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: credentials.json
         run: terraform apply -auto-approve
