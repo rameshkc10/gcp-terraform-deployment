@@ -5,7 +5,7 @@ provider "google" {
 }
 
 resource "google_storage_bucket" "example" {
-  name     = "ramesh-zaheed-bucket1"
+  name     = "ramesh-zaheed-bucket2"
   location = "US"
 
   versioning {
