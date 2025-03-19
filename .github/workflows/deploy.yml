@@ -1,39 +1,35 @@
-name: Terraform Deployment
+name: Deploy to Azure App Service
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+
+env:
+  AZURE_WEBAPP_NAME: rameshkoapp      # e.g., myapp-12345
+  DOTNET_VERSION: '8.0.407'                 # Check exact version with `dotnet --version`
+  PUBLISH_FOLDER: 'publish'
 
 jobs:
-  terraform:
-    runs-on: ubuntu-latest
-
+  build-and-deploy:
+    runs-on: widows-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Authenticate to GCP
-        run: echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: credentials.json  # Persist env variable
+    - name: Build and Publish
+      run: |
+        dotnet restore
+        dotnet build --configuration Release
+        dotnet publish -c Release -o ${{ env.PUBLISH_FOLDER }}
 
-      - name: Terraform Init
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: credentials.json
-        run: terraform init
-
-      - name: Terraform Plan
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: credentials.json
-        run: terraform plan -out=tfplan
-
-      - name: Terraform Apply
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: credentials.json
-        run: terraform apply -auto-approve
-
-      
+    - name: Deploy to Azure
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.rameshkoapp }}
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        package: ${{ env.PUBLISH_FOLDER }}
